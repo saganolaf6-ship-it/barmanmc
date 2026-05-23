@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BarmanMC | Serwer Minecraft</title>
+    <style>
+        /* Import czcionki z Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+        :root {
+            --bg-color: #0f0c1b;
+            --card-bg: #17142b;
+            --accent-gradient: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* SMALL CAPS STYLING */
+        h1, h2, h3, h4, .nav-links a, .btn, .mode-header {
+            font-variant: small-caps;
+            letter-spacing: 1px;
+        }
+
+        /* NAGŁÓWEK I NAWIGACJA */
+        header {
+            background: rgba(23, 20, 43, 0.8);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* GŁÓWNY BANER (HERO) */
+        .hero {
+            height: 45vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            margin-top: 80px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+            filter: blur(150px);
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 18px;
+            margin-bottom: 25px;
+            max-width: 600px;
+        }
+
+        .ip-box {
+            background: var(--card-bg);
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: 2px solid #a855f7;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+        }
+
+        .ip-box:hover {
+            transform: scale(1.05);
+        }
+
+        /* SEKCJE ZAWARTOSCI */
+        .content-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 40px 20px;
+            display: none;
+        }
+
+        .content-section.active-section {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2.section-title {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        h2.section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-gradient);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* KONTENER KATEGORII SKLEPU */
+        .mode-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(168, 85, 247, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 50px;
+        }
+
+        .mode-header {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            color: #fff;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .mode-description {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 35px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .shop-sub-title {
+            font-size: 20px;
+            margin: 20px 0 20px 0;
+            color: #fff;
+            font-variant: small-caps;
+            font-weight: 600;
+            border-left: 4px solid #3b82f6;
+            padding-left: 12px;
+        }
+
+        /* ITEMSHOP GRID */
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .shop-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 22px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.03);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .shop-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 22px rgba(168, 85, 247, 0.15);
+        }
+
+        .shop-card h4 { font-size: 20px; margin-bottom: 8px; color: #fff; }
+        .price { font-size: 26px; font-weight: 800; color: #a855f7; margin-bottom: 12px; }
+        .shop-card p { color: var(--text-muted); font-size: 13px; margin-bottom: 15px; }
+        
+        .btn {
+            display: inline-block;
+            background: var(--accent-gradient);
+            color: white;
+            padding: 8px 20px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-size: 14px;
+        }
+        .btn:hover { opacity: 0.9; }
+
+        /* REGULAMIN STYLING */
+        .rules-container {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            border-left: 5px solid #3b82f6;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .rule-item { margin-bottom: 25px; }
+        .rule-item h3 { font-size: 20px; color: #a855f7; margin-bottom: 5px; }
+        .rule-item p { color: var(--text-muted); }
+
+        /* ADMINISTRACJA STYLING */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .admin-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .admin-avatar {
+            width: 80px;
+            height: 80px;
+            background: #2a244d;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 24px;
+            border: 2px solid #3b82f6;
+        }
+        .admin-card h3 { font-size: 20px; }
+        .role {
+            font-size: 14px;
+            color: #a855f7;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* DISCORD STYLING */
+        .discord-section {
+            text-align: center;
+        }
+        .discord-box {
+            background: linear-gradient(135deg, #5865F2 0%, #404eed 100%);
+            padding: 50px;
+            border-radius: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 15px 30px rgba(88, 101, 242, 0.3);
+        }
+        .discord-box h3 { font-size: 28px; margin-bottom: 15px; }
+        .discord-btn {
+            background: white;
+            color: #5865F2;
+            margin-top: 20px;
+        }
+        .discord-btn:hover {
+            background: #f3f4f6;
+            opacity: 1;
+        }
+
+        /* STOPKA */
+        footer {
+            text-align: center;
+            padding: 40px;
+            margin-top: 80px;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAWIGACJA -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">BarmanMC</div>
+            <ul class="nav-links">
+                <li><a onclick="switchTab('itemshop')" id="nav-itemshop" class="active">ItemShop</a></li>
+                <li><a onclick="switchTab('regulamin')" id="nav-regulamin">Regulamin</a></li>
+                <li><a onclick="switchTab('administracja')" id="nav-administracja">Administracja</a></li>
+                <li><a onclick="switchTab('discord')" id="nav-discord">Discord</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- PROMO BANER (HERO) -->
+    <section class="hero">
+        <h1>Witamy na BarmanMC</h1>
+        <p>Wbijaj na najlepszy serwer Anarchia Practice, ulepsz swoje konto i zdominuj areny pvp!</p>
+        <div class="ip-box" onclick="copyIP()">IP: BARMANMC.PL (Kliknij aby skopiować)</div>
+    </section>
+
+    <!-- ZAKŁADKA: ITEMSHOP TRYBU ANARCHIA PRACTICE -->
+    <section id="itemshop" class="content-section active-section">
+        <h2 class="section-title">Sklep Serwerowy</h2>
+        
+        <div class="mode-container">
+            <div class="mode-header">Tryb: Anarchia Practice</div>
+            <div class="mode-description">Wszystkie przedmioty i rangi przeznaczone na zmagania na trybie Anarchia Practice.</div>
+            
+            <!-- RANGI -->
+            <div class="shop-sub-title">Rangi Premium</div>
+            <div class="shop-grid">
+                <div class="shop-card">
+                    <div>
+                        <h4>Legenda</h4>
+                        <div class="price">15 zł</div>
+                        <p>Zestaw przedmiotów rangi Legenda oraz dedykowany prefiks na czacie trybu Practice.</p>
+                    </div>
+                    <button class="btn">Kup teraz</button>
+                </div>
+                <div class="shop-card">
+                    <div>
+                        <h4>Elita</h4>
+                        <div class="price">30 zł</div>
+                        <p>Dostęp do elitarnych komend ułatwiających treningi i unikalny wygląd nicku.</p>
+                    </div>
+                    <button class="btn">Kup teraz</button>
+                </div>
+                <div class="shop-card">
+                    <div>
+                        <h4>Ninja</h4>
+                        <div class="price">50 zł</div>
+                        <p>Ekskluzywne i szybkie zestawy do walki oraz specjalne efekty wizualne.</p>
+                    </div>
+                    <button class="btn">Kup teraz</button>
+                </div>
+                <div class="shop-card">
+                    <div>
+                        <h4>Barman</h4>
+                        <div class="price">75 zł</div>
+                        <p>Najwyższy i najbardziej prestiżowy status na serwerze. Maksymalne przywileje.</p>
+                    </div>
+                    <button class="btn">Kup teraz</button>
+                </div>
+            </div>
+
+            <!-- KLUCZE -->
+            <div class="shop-sub-title">Klucze do Skrzyń</div>
+            <div class="shop-grid">
+                <div class="shop-card">
+                    <div>
+                        <h4>Klucz Rzadka</h4>
+                        <div class="price">1 zł / szt</div>
+                        <p>Podstawowy klucz skrywający przydatne zapasy i minerały na arenie.</p>
+                    </div>
+                    <button class="btn">Kup teraz</button>
+                </div>
+                <div class="shop-card">
+                    <div>
+                        <h4>Klucz Epicka</h4>
+                        <div class="price">3 zł / szt</div>
+                        <p>Wyższa szansa na drop potężnego ekwipunku bojowego i koxów.</p>
+                    </div>
+                    <button class="btn">Kup teraz</button>
+                </div>
+                <div class="shop-card">
+                    <div>
+                        <h4>Klucz Anarchiczny</h4>
+                        <div class="price">5 zł / szt</div>
+                        <p>Dedykowana skrzynia z potężnymi, niszczycielskimi przedmiotami.</p>
+                    </div>
+                    <button class="btn">Kup teraz</button>
+                </div>
+                <div class="shop-card">
+                    <div>
+                        <h4>Klucz Zwierzaków</h4>
+                        <div class="price">10 zł / szt</div>
+                        <p>Zdobądź rzadkiego kosmetycznego towarzysza, który podąża za Tobą.</p>
+                    </div>
+                    <button class="btn">Kup teraz</button>
+                </div>
+                <div class="shop-card">
+                    <div>
+                        <h4>Klucz 50v50</h4>
+                        <div class="price">20 zł / szt</div>
+                        <p>Najbardziej wartościowa skrzynia przygotowana pod epickie bitwy.</p>
+                    </div>
+                    <button class="btn">Kup teraz</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ZAKŁADKA: REGULAMIN -->
+    <section id="regulamin" class="content-section">
+        <h2 class="section-title">Regulamin serwera</h2>
+        <div class="rules-container">
+            <div class="rule-item">
+                <h3>§1. Postanowienia ogólne</h3>
+                <p>Wejście na serwer oznacza pełną akceptację niniejszego regulaminu.</p>
+            </div>
+            <div class="rule-item">
+                <h3>§2. Rozgrywka i Cheaty</h3>
+                <p>Używanie jakichkolwiek modyfikacji dających nielegalną przewagę jest surowo zabronione.</p>
+            </div>
+            <div class="rule-item">
+                <h3>§3. Kultura i zachowanie</h3>
+                <p>Szanuj innych graczy. Obrażanie i spam na czacie będą karane wyciszeniem.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ZAKŁADKA: ADMINISTRACJA -->
+    <section id="administracja" class="content-section">
+        <h2 class="section-title">Nasza Administracja</h2>
+        <div class="admin-grid">
+            <div class="admin-card">
+                <div class="admin-avatar" style="border-color: #ef4444;">B</div>
+                <h3>Barman</h3>
+                <div class="role">Właściciel</div>
+            </div>
+            <div class="admin-card">
+                <div class="admin-avatar" style="border-color: #a855f7;">A</div>
+                <h3>Antek</h3>
+                <div class="role">Admin</div>
+            </div>
+            <div class="admin-card">
+                <div class="admin-avatar" style="border-color: #10b981;">M</div>
+                <h3>Michał</h3>
+                <div class="role">Budowniczy</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ZAKŁADKA: DISCORD -->
+    <section id="discord" class="content-section discord-section">
+        <h2 class="section-title">Dołącz do Społeczności</h2>
+        <div class="discord-box">
+            <h3>Oficjalny Discord</h3>
+            <p>Kliknij przycisk poniżej, aby dołączyć do naszego serwera Discord!</p>
+            <a href="https://discord.gg/Qy5qKbVtWm" target="_blank" class="btn discord-btn">Dołącz do Discorda</a>
+        </div>
+    </section>
+
+    <!-- STOPKA -->
+    <footer>
+        <p>&copy; 2026 BarmanMC. Wszelkie prawa zastrzeżone. Strona nie jest powiązana z Mojang Studios.</p>
+    </footer>
+
+    <!-- SKRYPT JAVASCRIPT -->
+    <script>
+        function switchTab(tabId) {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active-section');
+            });
+
+            const links = document.querySelectorAll('.nav-links a');
+            links.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            document.getElementById(tabId).classList.add('active-section');
+            document.getElementById('nav-' + tabId).classList.add('active');
+        }
+
+        function copyIP() {
+            const ip = "BARMANMC.PL";
+            navigator.clipboard.writeText(ip).then(() => {
+                alert("Skopiowano IP serwera: " + ip);
+            }).catch(err => {
+                console.error('Błąd podczas kopiowania: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
